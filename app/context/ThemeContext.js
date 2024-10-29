@@ -13,7 +13,7 @@ export const ThemeProvider = ({ children }) => {
       setIsDarkMode(savedTheme == "dark");
       document.documentElement.classList.add(savedTheme);
     }
-  }, []);
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode((prev) => {
