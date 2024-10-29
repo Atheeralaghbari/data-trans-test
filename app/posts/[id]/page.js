@@ -13,6 +13,7 @@ const Post = ({ params }) => {
   const [posts, setPosts] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -23,6 +24,23 @@ const Post = ({ params }) => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        const fetchComments = async (id) => {
+          try {
+            const response = await fetch(
+              `https://jsonplaceholder.typicode.com/posts/${id}/comments`
+            );
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            setComments(data);
+          } catch (err) {
+            // setError(err.message);
+          } finally {
+            // setLoading(false);
+          }
+        };
+        fetchComments(data.id);
         setPosts(data);
       } catch (err) {
         setError(err.message);
@@ -68,6 +86,22 @@ const Post = ({ params }) => {
             setPosts(data.data);
           }}
         />
+        <div>
+          <h2 className="font-bold text-2xl">comments</h2>
+          {comments.map((ele) => {
+            return (
+              <div key={ele.id}>
+                <p className="text-blue text-sm font-semibold">
+                  name:{ele.name}
+                </p>
+                <p className="text-md">
+                  <span className=" text-blue-600">comment:</span>
+                  {ele.body}
+                </p>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
